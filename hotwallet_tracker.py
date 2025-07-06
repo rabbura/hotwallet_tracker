@@ -164,6 +164,8 @@ chain_info = {
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "플립6번핫": "0xa9b686EE77EfC18e7a08c48FA823CAA0cfDd754E",
+            "오켁핫": "0xAfEE421482FAEa92292ED3ffE29371742542AD72",
+            "쿠코24번핫": "0x03E6FA590CAdcf15A38e86158E9b3D06FF3399Ba",
         },
         "rpc": "arbitrum"
     },
@@ -174,6 +176,10 @@ chain_info = {
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "멕시핫7번핫": "0xDF90C9B995a3b10A5b8570a47101e6c6a29eb945",
+            "빗겟6번핫": "0x1AB4973a48dc892Cd9971ECE8e01DcC7688f8F23",
+            "오켁핫": "0xB5216CB558Cb018583bED009EE25cA73Eb27bB1d",
+            "쿠코26번핫": "0xa3f45e619cE3AAe2Fa5f8244439a66B203b78bCc",
+            "코베11번핫": "0xC8373EDFaD6d5C5f600b6b2507F78431C5271fF5",
         },
         "rpc": "optimism"
     },
@@ -193,6 +199,10 @@ chain_info = {
             "바낸1번핫": "0x6d8be5cdf0d7dee1f04e25fd70b001ae3b907824",
             "코베7번핫": "0xe1a0ddeb9b5b55e489977b438764e60e314e917c",
             "코베1번핫": "0x3dd87411a3754deea8cc52c4cf57e2fc254924cc",
+            "오켁핫": "0xC94bb9b883Ab642C1C3Ed07af4E36523e7DaF1Fe",
+            "쿠코32번핫": "0x4E75e27e5Aa74F0c7A9D4897dC10EF651f3A3995",
+            "훠비핫": "0xa77ff0e1C52f58363a53282624C7BaA5fA91687D",
+            "빗겟6번핫": "0x1AB4973a48dc892Cd9971ECE8e01DcC7688f8F23",
         },
         "rpc": "avalanche"
     },
@@ -200,6 +210,10 @@ chain_info = {
         "explorer": "https://polygonscan.com",
         "wallets": {
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
+            "멕시핫": "0x51E3D44172868Acc60D68ca99591Ce4230bc75E0",
+            "빗겟6번핫": "0x1AB4973a48dc892Cd9971ECE8e01DcC7688f8F23",
+            "쿠코핫": "0x9AC5637d295FEA4f51E086C329d791cC157B1C84",
+            "오켁핫": "0x343d752bB710c5575E417edB3F9FA06241A4749A",
         },
         "rpc": "polygon"
     },
