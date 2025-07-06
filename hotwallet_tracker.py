@@ -130,41 +130,59 @@ chain_info = {
     "BSC": {
         "explorer": "https://bscscan.com",
         "wallets": {
+            "바낸12번핫": "0x515b72ed8a97f42c568d6a143232775018f133c8",
+            "바낸16번핫": "0xa180fe01b906a1be37be6c534a3300785b20d947",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
-            "바낸핫": "0x515b72ed8a97f42c568d6a143232775018f133c8",
-            "바낸핫2": "0xa180fe01b906a1be37be6c534a3300785b20d947",
             "게이트핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
-            "멕시핫": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+            "멕시13번핫": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
+            "비트루핫": "0x868f027a5e3bd1cd29606a6681c3ddb7d3dd9b67",
+            "빗겟3번핫": "0x97b9d2102a9a65a26e1ee82d59e42d1b73b68689",
+            "빗겟4번핫": "0x0639556f03714a74a5feeaf5736a4a64ff70d206",
+            "빗겟6번핫": "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23",
+            "쿠코2번핫": "0x53f78a071d04224b8e254e243fffc6d9f2f3fa23",
+            "플립핫": "0xCD47f02B261426Ab734Be9271156327327407E43",
+            "코캐핫": "0xFE6D9AF579dEcCeBfC2d8D366C3D667adB696b32",
+            "오켁핫": "0xf5988713400DA6fC8A58EC9515e2b0DF9B40B115",
+            "후오비72번핫": "0xdd3CB5c974601BC3974d908Ea4A86020f9999E0c",
+            "빙핫": "0x065AC3d33FEC104FBa9f2f4D674AfAA7c4EBcF43",
+            "비트마트핫": "0xa23EF2319bA4C933eBfDbA80c332664A6Cb13F1A",
+            "해시키핫": "0x6A276a58C5194eF196B58442f627Dba070CB37BF",
+            "페멕스핫": "0xDB861E302EF7B7578A448e951AedE06302936c28",
+            "어센덱스핫": "0x983873529f95132BD1812A3B52c98Fb271d2f679",
+            "코인ex핫": "0x32e3e876aa0C1732ed9Efcf9d8615De7afaEF59f",
+            "woox 핫": "0x63DFE4e34A3bFC00eB0220786238a7C6cEF8Ffc4",
         },
         "rpc": "bsc"
     },
     "ARB": {
         "explorer": "https://arbiscan.io",
         "wallets": {
-            "바낸핫": "0x3931dab967c3e2dbb492fe12460a66d0fe4cc857",
-            "바낸핫2": "0xb38e8c17e38363af6ebdcb3dae12e0243582891d",
+            "바낸89번핫": "0x3931dab967c3e2dbb492fe12460a66d0fe4cc857",
+            "바낸54번핫": "0xb38e8c17e38363af6ebdcb3dae12e0243582891d",
             "바낸핫3": "0x25681ab599b4e2ceea31f8b498052c53fc2d74db",
-            "빗겟핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
-            "게이트핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+            "빗겟5번핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
+            "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
+            "플립6번핫": "0xa9b686EE77EfC18e7a08c48FA823CAA0cfDd754E",
         },
         "rpc": "arbitrum"
     },
     "OP": {
         "explorer": "https://optimistic.etherscan.io",
         "wallets": {
-            "바낸핫": "0xacd03d601e5bb1b275bb94076ff46ed9d753435a",
+            "바낸55번핫": "0xacd03d601e5bb1b275bb94076ff46ed9d753435a",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
-            "게이트핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+            "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+            "멕시핫7번핫": "0xDF90C9B995a3b10A5b8570a47101e6c6a29eb945",
         },
         "rpc": "optimism"
     },
     "BASE": {
         "explorer": "https://basescan.org",
         "wallets": {
-            "바낸핫": "0x3304e22ddaa22bcdc5fca2269b418046ae7b566a",
-            "바빗핫": "0xbaed383ede0e5d9d72430661f3285daa77e9439f",
-            "게이트핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+            "바낸73번핫": "0x3304e22ddaa22bcdc5fca2269b418046ae7b566a",
+            "바빗6번핫": "0xbaed383ede0e5d9d72430661f3285daa77e9439f",
+            "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "오켁핫": "0xc8802feab2fafb48b7d1ade77e197002c210f391",
         },
         "rpc": "base"
@@ -172,8 +190,9 @@ chain_info = {
     "AVAX": {
         "explorer": "https://snowtrace.io",
         "wallets": {
-            "바낸핫": "0x6d8be5cdf0d7dee1f04e25fd70b001ae3b907824",
-            "코베핫": "0xe1a0ddeb9b5b55e489977b438764e60e314e917c",
+            "바낸1번핫": "0x6d8be5cdf0d7dee1f04e25fd70b001ae3b907824",
+            "코베7번핫": "0xe1a0ddeb9b5b55e489977b438764e60e314e917c",
+            "코베1번핫": "0x3dd87411a3754deea8cc52c4cf57e2fc254924cc",
         },
         "rpc": "avalanche"
     },
