@@ -192,6 +192,8 @@ chain_info = {
             "바낸73번핫": "0x3304e22ddaa22bcdc5fca2269b418046ae7b566a",
             "바빗6번핫": "0xbaed383ede0e5d9d72430661f3285daa77e9439f",
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+            "멕시15번": "0x4e3ae00E8323558fA5Cac04b152238924AA31B60",
+            "빗겟3번핫": "0x97b9D2102A9a65A26E1EE82D59e42d1B73B68689",
             "오켁핫": "0xc8802feab2fafb48b7d1ade77e197002c210f391",
         },
         "rpc": "base"
