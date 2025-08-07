@@ -96,16 +96,24 @@ chain_info = {
             "바낸15번핫": "0x21a31ee1afc51d94c2efccaa2092ad1028285549",
             "바낸14번핫": "0x28c6c06298d514db089934071355e5743bf21d60",
             "바낸18번핫": "0x9696f59e4d72e237be84ffd425dcad154bf96976",
+            "바낸51번지갑(콜드추정)": "0x8894e0a0c962cb723c1976a4421c95949be2d4e3",
+            "바낸93번지갑(콜드추정)": "0x98adef6f2ac8572ec48965509d69a8dd5e8bba9d",
+            "바낸withdraw7지갑": "0xe2fc31f816a9b94326492132018c3aecc4a93ae1",
+            "바낸콜드1": "0x0a367f918340d47d36b21c93e9a2b6853cc9d6f0",
+            "바낸콜드2": "0x6b5c22a67b44faac1eddd6ae1b284b2606f62071",
             "바낸28번지갑(콜드추정)": "0x5a52E96BAcdaBb82fd05763E25335261B270Efcb",
             "바낸20번지갑(콜드추정)": "0xF977814e90dA44bFA03b6295A0616a897441aceC",
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40", 
             "바빗핫2": "0xA31231E727Ca53Ff95f0D00a06C645110c4aB647",
+            "바빗핫173": "0xf42aac93ab142090db9fdc0bc86aab73cb36f173",
             "코베10번핫": "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
             "빗겟5번핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
             "빗겟4번핫": "0x0639556f03714a74a5feeaf5736a4a64ff70d206",
             "빗겟6번핫": "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23",            
             "오켁핫": "0x91d40e4818f4d4c57b4578d9eca6afc92ac8debe",
+            "오켁146지갑": "0x4a4aaa0155237881fbd5c34bfae16e985a7b068d",
+            "오켁콜드": "0xdce83237fbf279c4522e7cac4b10428e2b8694da",
             "멕시16번핫": "0x9642b23ed1e01df1092b92641051881a322f5d4e",
             "쿠코핫": "0xd91efec7e42f80156d1d9f660a69847188950747",
             "쿠코20번핫": "0x58edf78281334335effa23101bbe3371b6a36a51",
@@ -113,6 +121,7 @@ chain_info = {
             "코인원1번핫": "0x167a9333bf582556f35bd4d16a7e80e191aa6476",
             "후오비48번핫": "0xa03400e098f4421b34a3a44a1b4e571419517687",
             "크닷12번핫": "0x46340b20830761efd32832a74d7169b29feb9758",
+            "크닷21번핫": "0x5b71d5fd6bb118665582dd87922bf3b9de6c75f9",
             "빙핫": "0x065AC3d33FEC104FBa9f2f4D674AfAA7c4EBcF43",  
             "플립핫": "0xd49417f37cED33aBA35DDAbf208D5bFcD87b4eBe",
             "코캐핫": "0xFE6D9AF579dEcCeBfC2d8D366C3D667adB696b32",
@@ -813,3 +822,4 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
