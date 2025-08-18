@@ -106,6 +106,7 @@ chain_info = {
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40", 
             "바빗핫2": "0xA31231E727Ca53Ff95f0D00a06C645110c4aB647",
+            "바빗핫3": "0xad85405cbb1476825b78a021fa9e543bf7937549",
             "바빗핫173": "0xf42aac93ab142090db9fdc0bc86aab73cb36f173",
             "코베10번핫": "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
             "빗겟5번핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
@@ -822,4 +823,5 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
