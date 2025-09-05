@@ -131,6 +131,7 @@ chain_info = {
             "비트파이넥스핫": "0x77134cbC06cB00b66F4c7e623D5fdBF6777635EC",
             "비트루핫": "0x6cc8dCbCA746a6E4Fdefb98E1d0DF903b107fd21",
             "크라켄7번핫": "0x89e51fA8CA5D66cd220bAed62ED01e8951aa7c40",
+            "크라켄28번핫": "0x5c5F75B6FbA2903ADf66C7bDdCeA99B4CcE44a8A",
             "페멕스1번핫": "0xdb861e302ef7b7578a448e951aede06302936c28",
             "어센덱스6번핫": "0x983873529f95132BD1812A3B52c98Fb271d2f679",
             "제미니4번핫": "0x5f65f7b609678448494de4c87521cdf6cef1e932",
@@ -823,5 +824,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
