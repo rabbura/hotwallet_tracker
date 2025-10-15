@@ -113,7 +113,6 @@ chain_info = {
             "빗겟4번핫": "0x0639556f03714a74a5feeaf5736a4a64ff70d206",
             "빗겟6번핫": "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23",            
             "오켁핫": "0x91d40e4818f4d4c57b4578d9eca6afc92ac8debe",
-            "오켁핫2": "0x91D40E4818F4D4C57b4578d9ECa6AFc92aC8DEbE",            
             "오켁146지갑": "0x4a4aaa0155237881fbd5c34bfae16e985a7b068d",
             "오켁콜드": "0xdce83237fbf279c4522e7cac4b10428e2b8694da",
             "멕시16번핫": "0x9642b23ed1e01df1092b92641051881a322f5d4e",
@@ -825,6 +824,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
