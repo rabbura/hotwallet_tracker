@@ -104,6 +104,7 @@ chain_info = {
             "바낸28번지갑(콜드추정)": "0x5a52E96BAcdaBb82fd05763E25335261B270Efcb",
             "바낸20번지갑(콜드추정)": "0xF977814e90dA44bFA03b6295A0616a897441aceC",
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+            "게이트콜드추정": "0xD13C536e71698e189329e9583BE8b67817E045b0",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40", 
             "바빗핫2": "0xA31231E727Ca53Ff95f0D00a06C645110c4aB647",
             "바빗핫3": "0xad85405cbb1476825b78a021fa9e543bf7937549",
@@ -825,6 +826,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
