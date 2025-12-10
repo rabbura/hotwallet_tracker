@@ -111,6 +111,7 @@ chain_info = {
             "바빗핫4": "0x6522B7F9d481eCEB96557F44753a4b893F837E90",
             "바빗핫173": "0xf42aac93ab142090db9fdc0bc86aab73cb36f173",
             "코베10번핫": "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
+            "빗겟3번핫": "0x97b9D2102A9a65A26E1EE82D59e42d1B73B68689",
             "빗겟5번핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
             "빗겟4번핫": "0x0639556f03714a74a5feeaf5736a4a64ff70d206",
             "빗겟6번핫": "0x1ab4973a48dc892cd9971ece8e01dcc7688f8f23",            
@@ -138,6 +139,7 @@ chain_info = {
             "어센덱스6번핫": "0x983873529f95132BD1812A3B52c98Fb271d2f679",
             "제미니4번핫": "0x5f65f7b609678448494de4c87521cdf6cef1e932",
             "코인ex핫": "0x20145c5e27408b5c1cf2239d0115ee3bbc27cbd7",
+            "고팍스핫": "0xe3031c1bfaa7825813c562cbdcc69d96fcad2087",
             "woox2번핫": "0x63DFE4e34A3bFC00eB0220786238a7C6cEF8Ffc4",
         },
         "rpc": "eth"
@@ -218,6 +220,8 @@ chain_info = {
         "explorer": "https://snowtrace.io",
         "wallets": {
             "바낸1번핫": "0x6d8be5cdf0d7dee1f04e25fd70b001ae3b907824",
+            "바낸핫": "0xcddc5d0ebeb71a08fff26909aa6c0d4e256b4fe1",
+            "바낸핫2": "0x3bce63c6c9abf7a47f52c9a3a7950867700b0158",            
             "코베7번핫": "0xe1a0ddeb9b5b55e489977b438764e60e314e917c",
             "코베1번핫": "0x3dd87411a3754deea8cc52c4cf57e2fc254924cc",
             "오켁핫": "0xC94bb9b883Ab642C1C3Ed07af4E36523e7DaF1Fe",
@@ -826,6 +830,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
