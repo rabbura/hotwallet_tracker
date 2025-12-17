@@ -148,6 +148,7 @@ chain_info = {
         "explorer": "https://bscscan.com",
         "wallets": {
             "바낸12번핫": "0x515b72ed8a97f42c568d6a143232775018f133c8",
+            "바낸10번핫": "0xEB2d2F1b8c558a40207669291Fda468E50c8A0bB", 
             "바낸20번핫(콜드추정)": "0xF977814e90dA44bFA03b6295A0616a897441aceC",
             "바낸16번핫": "0xa180fe01b906a1be37be6c534a3300785b20d947",
             "바낸7번핫": "0xe2fc31F816A9b94326492132018C3aEcC4a93aE1",
@@ -830,6 +831,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
