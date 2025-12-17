@@ -155,7 +155,7 @@ chain_info = {
             "바낸51번핫": "0x8894E0a0c962CB723c1976a4421c95949bE2D4E3",
             "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "바빗핫2": "0xc3121c4ca7402922e025e62e9bb4d5b244303878",
-            "게이트핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
+            "게이트핫(거의메인)": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "멕시13번핫": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
             "비트루핫": "0x868f027a5e3bd1cd29606a6681c3ddb7d3dd9b67",
             "빗겟3번핫": "0x97b9d2102a9a65a26e1ee82d59e42d1b73b68689",
@@ -831,6 +831,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
