@@ -390,35 +390,48 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
         if api_key:
             params["apikey"] = api_key
 
-    try:
-        res = requests.get(api_url, params=params, timeout=15)
+    max_retries = 2
 
-        if res.status_code == 200:
-            data = res.json()
+    for attempt in range(max_retries):
+        try:
+            res = requests.get(api_url, params=params, timeout=15)
 
-            if data.get("status") == "1" and data.get("result"):
-                result_list = data.get("result", [])
+            if res.status_code == 200:
+                data = res.json()
 
-                # 출금 트랜잭션만 필터링 (from == wallet)
-                for tx in result_list:
-                    tx_from = tx.get("from", "").lower()
-                    wallet_lower = wallet.lower()
+                # Rate limit 에러 체크
+                if data.get("status") == "0" and "rate limit" in data.get("message", "").lower():
+                    time.sleep(0.5)  # 0.5초 대기 후 재시도
+                    continue
 
-                    if tx_from == wallet_lower:
-                        token_decimal = int(tx.get("tokenDecimal", decimals))
-                        amount = int(tx.get("value", 0)) / (10 ** token_decimal)
+                if data.get("status") == "1" and data.get("result"):
+                    result_list = data.get("result", [])
 
-                        return {
-                            "amount": amount,
-                            "to": tx.get("to", ""),
-                            "timestamp": int(tx.get("timeStamp", 0)),
-                            "tx_hash": tx.get("hash", "")
-                        }
+                    # 출금 트랜잭션만 필터링 (from == wallet)
+                    for tx in result_list:
+                        tx_from = tx.get("from", "").lower()
+                        wallet_lower = wallet.lower()
 
-        return None
+                        if tx_from == wallet_lower:
+                            token_decimal = int(tx.get("tokenDecimal", decimals))
+                            amount = int(tx.get("value", 0)) / (10 ** token_decimal)
 
-    except Exception as e:
-        return None
+                            return {
+                                "amount": amount,
+                                "to": tx.get("to", ""),
+                                "timestamp": int(tx.get("timeStamp", 0)),
+                                "tx_hash": tx.get("hash", "")
+                            }
+
+            return None
+
+        except Exception as e:
+            if attempt < max_retries - 1:
+                time.sleep(0.3)
+                continue
+            return None
+
+    return None
 
 # ============================================================
 # 잔고 + 출금 정보 통합 조회 함수
@@ -1130,7 +1143,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
-
 
 
 
