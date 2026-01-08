@@ -295,7 +295,7 @@ if include_dex:
 # 병렬처리 워커 수 설정
 col1, col2 = st.columns([3, 1])
 with col2:
-    max_workers = st.slider("병렬처리 워커 수", min_value=1, max_value=10, value=5, help="동시에 처리할 작업 수")
+    max_workers = st.slider("병렬처리 워커 수", min_value=1, max_value=10, value=3, help="동시에 처리할 작업 수 (API 제한으로 3 권장)")
 
 # 토큰 정보를 저장할 전역 변수 (thread-safe)
 token_info_lock = threading.Lock()
@@ -390,7 +390,10 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
         if api_key:
             params["apikey"] = api_key
 
-    max_retries = 2
+    max_retries = 3
+
+    # Rate limit 방지: API 호출 전 약간의 딜레이
+    time.sleep(0.25)
 
     for attempt in range(max_retries):
         try:
@@ -404,9 +407,15 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
                     time.sleep(0.5)  # 0.5초 대기 후 재시도
                     continue
 
-                # API 에러 로깅
+                # API 에러 처리
                 if data.get("status") == "0":
-                    # 디버깅용: API 에러 반환
+                    error_msg = data.get("message", "Unknown error").lower()
+                    # Rate limit 또는 NOTOK은 재시도
+                    if "rate limit" in error_msg or "notok" in error_msg:
+                        if attempt < max_retries - 1:
+                            time.sleep(1)  # 1초 대기 후 재시도
+                            continue
+                    # 최종 실패시 에러 반환
                     return {"error": data.get("message", "Unknown error"), "wallet": wallet[:10]}
 
                 if data.get("status") == "1" and data.get("result"):
