@@ -143,12 +143,12 @@ chain_info = {
             "바낸20번지갑(콜드추정)": "0xF977814e90dA44bFA03b6295A0616a897441aceC",
             "게이트1번핫(거의메인)": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "게이트콜드추정": "0xD13C536e71698e189329e9583BE8b67817E045b0",
-            "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
+            "바빗핫(거의메인)": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "바빗핫2": "0xA31231E727Ca53Ff95f0D00a06C645110c4aB647",
             "바빗핫3": "0xad85405cbb1476825b78a021fa9e543bf7937549",
             "바빗핫4": "0x6522B7F9d481eCEB96557F44753a4b893F837E90",
             "바빗핫173": "0xf42aac93ab142090db9fdc0bc86aab73cb36f173",
-            "코베10번핫": "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
+            "코베10번핫(거의메인)": "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
             "빗겟3번핫": "0x97b9D2102A9a65A26E1EE82D59e42d1B73B68689",
             "빗겟5번핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
             "빗겟4번핫": "0x0639556f03714a74a5feeaf5736a4a64ff70d206",
@@ -156,7 +156,7 @@ chain_info = {
             "오켁핫": "0x91d40e4818f4d4c57b4578d9eca6afc92ac8debe",
             "오켁146지갑": "0x4a4aaa0155237881fbd5c34bfae16e985a7b068d",
             "오켁콜드": "0xdce83237fbf279c4522e7cac4b10428e2b8694da",
-            "멕시16번핫": "0x9642b23ed1e01df1092b92641051881a322f5d4e",
+            "멕시16번핫(거의메인)": "0x9642b23ed1e01df1092b92641051881a322f5d4e",
             "쿠코핫": "0xd91efec7e42f80156d1d9f660a69847188950747",
             "쿠코20번핫(거의메인)": "0x58edf78281334335effa23101bbe3371b6a36a51",
             "코빗8번핫": "0xf0bc8fddb1f358cef470d63f96ae65b1d7914953",
@@ -191,7 +191,7 @@ chain_info = {
             "바낸16번핫": "0xa180fe01b906a1be37be6c534a3300785b20d947",
             "바낸7번핫": "0xe2fc31F816A9b94326492132018C3aEcC4a93aE1",
             "바낸51번핫": "0x8894E0a0c962CB723c1976a4421c95949bE2D4E3",
-            "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
+            "바빗핫(거의메인)": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "바빗핫2": "0xc3121c4ca7402922e025e62e9bb4d5b244303878",
             "게이트핫(거의메인)": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "멕시13번핫": "0x4982085c9e2f89f2ecb8131eca71afad896e89cb",
@@ -222,7 +222,7 @@ chain_info = {
             "바낸핫3": "0x25681ab599b4e2ceea31f8b498052c53fc2d74db",
             "빗겟5번핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
-            "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
+            "바빗핫(거의메인)": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "플립6번핫": "0xa9b686EE77EfC18e7a08c48FA823CAA0cfDd754E",
             "오켁핫": "0xAfEE421482FAEa92292ED3ffE29371742542AD72",
             "쿠코24번핫": "0x03E6FA590CAdcf15A38e86158E9b3D06FF3399Ba",
@@ -233,7 +233,7 @@ chain_info = {
         "explorer": "https://optimistic.etherscan.io",
         "wallets": {
             "바낸55번핫": "0xacd03d601e5bb1b275bb94076ff46ed9d753435a",
-            "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
+            "바빗핫(거의메인)": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "게이트1번핫": "0x0d0707963952f2fba59dd06f2b425ace40b492fe",
             "멕시핫7번핫": "0xDF90C9B995a3b10A5b8570a47101e6c6a29eb945",
             "빗겟6번핫": "0x1AB4973a48dc892Cd9971ECE8e01DcC7688f8F23",
@@ -273,7 +273,7 @@ chain_info = {
     "POL": {
         "explorer": "https://polygonscan.com",
         "wallets": {
-            "바빗핫": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
+            "바빗핫(거의메인)": "0xf89d7b9c864f589bbf53a82105107622b35eaa40",
             "멕시핫": "0x51E3D44172868Acc60D68ca99591Ce4230bc75E0",
             "빗겟6번핫": "0x1AB4973a48dc892Cd9971ECE8e01DcC7688f8F23",
             "빗겟4번핫": "0x0639556F03714A74a5fEEaF5736a4A64fF70D206",
@@ -1065,15 +1065,18 @@ if token_input.startswith("0x") and selected_chain:
             return ["background-color: #3d3d00; color: #ffff00"] * len(row)
         return [""] * len(row)
 
-    # 스타일 적용 (탐색기 링크 컬럼 제외)
-    display_df = df.drop(columns=["탐색기"])
-    styled_df = display_df.style.apply(highlight_main_wallets, axis=1)
+    styled_df = df.style.apply(highlight_main_wallets, axis=1)
 
     st.dataframe(
         styled_df,
         use_container_width=True,
         height=min(len(df) * 40 + 100, 1000),
         column_config={
+            "탐색기": st.column_config.LinkColumn(
+                "탐색기",
+                help="블록 탐색기에서 확인",
+                display_text="🔍 확인"
+            ),
             "최근출금": st.column_config.TextColumn(
                 "최근출금($)",
                 help="해당 지갑에서 최근 출금한 금액 (달러 환산)"
@@ -1092,16 +1095,6 @@ if token_input.startswith("0x") and selected_chain:
             )
         }
     )
-
-    # 탐색기 링크 별도 표시
-    with st.expander("🔍 블록 탐색기 링크"):
-        for _, row in df.iterrows():
-            wallet_name = row["지갑이름"]
-            link = row["탐색기"]
-            if "(거의메인)" in wallet_name:
-                st.markdown(f"⭐ **[{wallet_name}]({link})**")
-            else:
-                st.markdown(f"[{wallet_name}]({link})")
 
     # 디버깅 정보
     with st.expander("디버깅 정보"):
@@ -1193,6 +1186,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
