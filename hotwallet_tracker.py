@@ -404,15 +404,26 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
                     time.sleep(0.5)  # 0.5초 대기 후 재시도
                     continue
 
+                # API 에러 로깅
+                if data.get("status") == "0":
+                    # 디버깅용: API 에러 반환
+                    return {"error": data.get("message", "Unknown error"), "wallet": wallet[:10]}
+
                 if data.get("status") == "1" and data.get("result"):
                     result_list = data.get("result", [])
 
+                    # 트랜잭션이 없는 경우
+                    if len(result_list) == 0:
+                        return {"error": "No transactions", "wallet": wallet[:10]}
+
                     # 출금 트랜잭션만 필터링 (from == wallet)
+                    out_count = 0
                     for tx in result_list:
                         tx_from = tx.get("from", "").lower()
                         wallet_lower = wallet.lower()
 
                         if tx_from == wallet_lower:
+                            out_count += 1
                             token_decimal = int(tx.get("tokenDecimal", decimals))
                             amount = int(tx.get("value", 0)) / (10 ** token_decimal)
 
@@ -423,13 +434,16 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
                                 "tx_hash": tx.get("hash", "")
                             }
 
-            return None
+                    # 출금이 없는 경우 (입금만 있음)
+                    return {"error": f"No OUT in {len(result_list)} txs", "wallet": wallet[:10]}
+
+            return {"error": f"HTTP {res.status_code}", "wallet": wallet[:10]}
 
         except Exception as e:
             if attempt < max_retries - 1:
                 time.sleep(0.3)
                 continue
-            return None
+            return {"error": str(e)[:50], "wallet": wallet[:10]}
 
     return None
 
@@ -895,11 +909,17 @@ if token_input.startswith("0x") and selected_chain:
 
                         # 최근 출금 정보 처리
                         last_wd = result.get("last_withdrawal")
-                        if last_wd:
+                        if last_wd and "error" not in last_wd:
                             wd_amount = format_amount(last_wd["amount"])
                             wd_to = last_wd["to"][:10] + "..." if last_wd["to"] else "-"
                             wd_time = format_time_ago(last_wd["timestamp"])
                             wd_timestamp = last_wd["timestamp"]
+                        elif last_wd and "error" in last_wd:
+                            # 에러 표시 (디버깅용)
+                            wd_amount = f"ERR:{last_wd['error'][:15]}"
+                            wd_to = "-"
+                            wd_time = "-"
+                            wd_timestamp = 0
                         else:
                             wd_amount = "-"
                             wd_to = "-"
@@ -1146,7 +1166,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
-
 
 
 
