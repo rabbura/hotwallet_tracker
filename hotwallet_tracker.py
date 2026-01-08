@@ -295,7 +295,7 @@ if include_dex:
 # 병렬처리 워커 수 설정
 col1, col2 = st.columns([3, 1])
 with col2:
-    max_workers = st.slider("병렬처리 워커 수", min_value=1, max_value=10, value=5, help="동시에 처리할 작업 수")
+    max_workers = st.slider("병렬처리 워커 수", min_value=1, max_value=10, value=4, help="동시에 처리할 작업 수")
 
 # 토큰 정보를 저장할 전역 변수 (thread-safe)
 token_info_lock = threading.Lock()
@@ -402,18 +402,13 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
             if res.status_code == 200:
                 data = res.json()
 
-                # Rate limit 에러 체크
-                if data.get("status") == "0" and "rate limit" in data.get("message", "").lower():
-                    time.sleep(0.5)  # 0.5초 대기 후 재시도
-                    continue
-
-                # API 에러 처리
+                # API 에러 처리 (Rate limit, NOTOK 등)
                 if data.get("status") == "0":
                     error_msg = data.get("message", "Unknown error").lower()
                     # Rate limit 또는 NOTOK은 재시도
                     if "rate limit" in error_msg or "notok" in error_msg:
                         if attempt < max_retries - 1:
-                            time.sleep(1)  # 1초 대기 후 재시도
+                            time.sleep(1.5 + attempt)  # 점점 더 긴 대기 (1.5초, 2.5초, 3.5초...)
                             continue
                     # 최종 실패시 에러 반환
                     return {"error": data.get("message", "Unknown error"), "wallet": wallet[:10]}
@@ -804,6 +799,98 @@ def get_token_price(chain_key, contract_address, selected_chain=None):
 
     return 0, "없음"
 
+def get_token_market_data(chain_key, contract_address):
+    """
+    CoinGecko에서 토큰의 시가총액, 24시간 거래량, FDV 등 시장 데이터 조회
+
+    Returns:
+        dict: {
+            "price": 현재가,
+            "market_cap": 시가총액,
+            "fdv": 완전희석가치,
+            "volume_24h": 24시간 거래량,
+            "price_change_24h": 24시간 가격 변동률,
+            "circulating_supply": 유통량,
+            "total_supply": 총 발행량,
+            "source": 데이터 출처
+        }
+    """
+    result = {
+        "price": 0,
+        "market_cap": 0,
+        "fdv": 0,
+        "volume_24h": 0,
+        "price_change_24h": 0,
+        "circulating_supply": 0,
+        "total_supply": 0,
+        "source": "없음"
+    }
+
+    try:
+        # CoinGecko token info API (더 상세한 정보)
+        url = f"https://api.coingecko.com/api/v3/coins/{chain_key}/contract/{contract_address.lower()}"
+        headers = {"Accept": "application/json"}
+        res = requests.get(url, headers=headers, timeout=15)
+
+        if res.status_code == 200:
+            data = res.json()
+            market_data = data.get("market_data", {})
+
+            result["price"] = market_data.get("current_price", {}).get("usd", 0)
+            result["market_cap"] = market_data.get("market_cap", {}).get("usd", 0)
+            result["fdv"] = market_data.get("fully_diluted_valuation", {}).get("usd", 0)
+            result["volume_24h"] = market_data.get("total_volume", {}).get("usd", 0)
+            result["price_change_24h"] = market_data.get("price_change_percentage_24h", 0)
+            result["circulating_supply"] = market_data.get("circulating_supply", 0)
+            result["total_supply"] = market_data.get("total_supply", 0)
+            result["source"] = "CoinGecko"
+
+            return result
+
+    except Exception as e:
+        pass
+
+    # 상세 API 실패시 기본 price API로 가격만이라도 가져오기
+    try:
+        url = f"https://api.coingecko.com/api/v3/simple/token_price/{chain_key}"
+        params = {
+            "contract_addresses": contract_address.lower(),
+            "vs_currencies": "usd",
+            "include_market_cap": "true",
+            "include_24hr_vol": "true",
+            "include_24hr_change": "true"
+        }
+        headers = {"Accept": "application/json"}
+        res = requests.get(url, params=params, headers=headers, timeout=10)
+
+        if res.status_code == 200:
+            data = res.json()
+            token_data = data.get(contract_address.lower(), {})
+
+            result["price"] = token_data.get("usd", 0)
+            result["market_cap"] = token_data.get("usd_market_cap", 0)
+            result["volume_24h"] = token_data.get("usd_24h_vol", 0)
+            result["price_change_24h"] = token_data.get("usd_24h_change", 0)
+            result["source"] = "CoinGecko (Simple)"
+
+    except Exception as e:
+        pass
+
+    return result
+
+def format_large_number(num):
+    """큰 숫자를 K, M, B 단위로 포맷팅"""
+    if num is None or num == 0:
+        return "-"
+    if num >= 1_000_000_000:
+        return f"${num/1_000_000_000:.2f}B"
+    elif num >= 1_000_000:
+        return f"${num/1_000_000:.2f}M"
+    elif num >= 1_000:
+        return f"${num/1_000:.2f}K"
+    else:
+        return f"${num:.2f}"
+
 if token_input.startswith("0x") and selected_chain:
     # 토큰 정보 캐시 초기화
     token_info_cache.clear()
@@ -871,149 +958,207 @@ if token_input.startswith("0x") and selected_chain:
             st.error(f"토큰 정보 조회 오류: {str(e)}")
             st.subheader(f"📊 {selected_chain} 체인 - {token_input[:10]}...{token_input[-6:]} 잔고")
 
-    # 토큰 가격 조회
-    with st.spinner('토큰 가격 조회 중...'):
-        token_price, price_source = get_token_price(cg_key, token_input, selected_chain)
+    # 토큰 시장 데이터 조회 (가격, 시총, 거래량 등)
+    with st.spinner('토큰 시장 데이터 조회 중...'):
+        market_data = get_token_market_data(cg_key, token_input)
+        token_price = market_data["price"]
+
         if token_price > 0:
-            st.success(f"토큰 가격: ${token_price:,.6f} (출처: {price_source})")
+            # 가격 변동률 색상
+            price_change = market_data["price_change_24h"]
+            if price_change > 0:
+                change_color = "green"
+                change_icon = "📈"
+            elif price_change < 0:
+                change_color = "red"
+                change_icon = "📉"
+            else:
+                change_color = "gray"
+                change_icon = "➡️"
+
+            # 시장 데이터 표시 (4열)
+            st.markdown("### 💹 실시간 시장 데이터")
+            mcol1, mcol2, mcol3, mcol4 = st.columns(4)
+
+            with mcol1:
+                st.metric(
+                    "현재가",
+                    f"${token_price:,.6f}" if token_price < 1 else f"${token_price:,.4f}",
+                    f"{price_change:+.2f}%" if price_change else None,
+                    delta_color="normal"
+                )
+
+            with mcol2:
+                mc_display = format_large_number(market_data["market_cap"])
+                st.metric("시가총액 (MC)", mc_display)
+
+            with mcol3:
+                fdv_display = format_large_number(market_data["fdv"])
+                st.metric("완전희석가치 (FDV)", fdv_display)
+
+            with mcol4:
+                vol_display = format_large_number(market_data["volume_24h"])
+                st.metric("24시간 거래량", vol_display)
+
+            # 데이터 출처 표시
+            st.caption(f"📊 데이터 출처: {market_data['source']}")
         else:
-            st.warning("토큰 가격을 가져올 수 없습니다.")
+            # 기존 방식으로 가격만 조회 시도
+            token_price, price_source = get_token_price(cg_key, token_input, selected_chain)
+            if token_price > 0:
+                st.success(f"토큰 가격: ${token_price:,.6f} (출처: {price_source})")
+            else:
+                st.warning("토큰 가격을 가져올 수 없습니다.")
 
     # 정렬 옵션
     sort_option = st.radio("정렬 기준", ["잔고 많은 순", "달러 가치 높은 순", "최근 출금 순"], horizontal=True)
 
-    # 병렬 잔고 + 출금 정보 조회
-    with st.spinner(f'잔고 및 출금 정보 조회 중... (병렬처리: {max_workers}개 워커)'):
+    # 순차 처리 모드 (rate limit 방지를 위해 순차 처리)
+    # 잔고는 병렬, 출금 정보는 순차로 분리하여 안정성 확보
+    with st.spinner(f'잔고 조회 중... (병렬처리: {max_workers}개 워커)'):
         rows = []
+        balance_results = {}
         progress_bar = st.progress(0)
         progress_text = st.empty()
 
         try:
-            # ThreadPoolExecutor를 사용한 병렬처리
+            # 1단계: 잔고만 병렬로 빠르게 조회 (RPC는 rate limit 없음)
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                # 잔고 + 출금 정보 통합 조회 작업 제출
                 future_to_wallet = {}
                 for name, addr in wallets.items():
                     future = executor.submit(
-                        get_wallet_data,
+                        get_token_balance_rpc,
                         rpc_urls,
                         addr,
                         token_input,
                         name,
-                        selected_chain,
-                        token_info.get("decimals", 18) if 'token_info' in dir() else 18
+                        selected_chain
                     )
                     future_to_wallet[future] = (name, addr)
 
-                # 완료된 작업 처리
                 completed = 0
                 total = len(wallets)
 
-                for future in as_completed(future_to_wallet, timeout=120):  # 타임아웃 증가
+                for future in as_completed(future_to_wallet, timeout=60):
                     try:
                         name, addr = future_to_wallet[future]
                         result = future.result(timeout=10)
-
-                        balance = result["balance"]
-                        usd_value = round(balance * token_price, 2) if token_price > 0 else 0
-                        token_url = f"{explorer}/token/{token_input}?a={addr}"
-
-                        # 최근 출금 정보 처리
-                        last_wd = result.get("last_withdrawal")
-                        if last_wd and "error" not in last_wd:
-                            # 달러 환산 표시
-                            wd_amount_raw = last_wd["amount"]
-                            wd_usd = wd_amount_raw * token_price if token_price > 0 else 0
-                            wd_amount = f"${format_amount(wd_usd)}" if wd_usd > 0 else format_amount(wd_amount_raw)
-                            wd_to = last_wd["to"][:10] + "..." if last_wd["to"] else "-"
-                            wd_time = format_time_ago(last_wd["timestamp"])
-                            wd_timestamp = last_wd["timestamp"]
-                        elif last_wd and "error" in last_wd:
-                            # 에러 표시 (디버깅용)
-                            wd_amount = f"ERR:{last_wd['error'][:15]}"
-                            wd_to = "-"
-                            wd_time = "-"
-                            wd_timestamp = 0
-                        else:
-                            wd_amount = "-"
-                            wd_to = "-"
-                            wd_time = "-"
-                            wd_timestamp = 0
-
-                        rows.append({
-                            "지갑이름": name,
-                            "주소": addr[:10] + "..." + addr[-6:],
-                            "잔고": f"{balance:,.4f}",
-                            "달러환산": f"${usd_value:,.2f}",
-                            "최근출금": f"{wd_amount}",
-                            "출금대상": wd_to,
-                            "출금시간": wd_time,
-                            "출금타임스탬프": wd_timestamp,  # 정렬용
-                            "탐색기": token_url,
-                            "타입": "CEX"
-                        })
-
-                        # 진행률 업데이트
-                        completed += 1
-                        progress_bar.progress(completed / total)
-                        progress_text.text(f"진행 중: {completed}/{total} 지갑 완료")
-
+                        balance_results[addr] = result.get("balance", 0)
                     except Exception as e:
-                        # 오류 발생시에도 기본값으로 추가
                         name, addr = future_to_wallet[future]
-                        rows.append({
-                            "지갑이름": name,
-                            "주소": addr[:10] + "..." + addr[-6:],
-                            "잔고": "0.0000",
-                            "달러환산": "$0.00",
-                            "최근출금": "-",
-                            "출금대상": "-",
-                            "출금시간": "-",
-                            "출금타임스탬프": 0,
-                            "탐색기": f"{explorer}/token/{token_input}?a={addr}",
-                            "타입": "CEX"
-                        })
-                        completed += 1
-                        progress_bar.progress(completed / total)
+                        balance_results[addr] = 0
+
+                    completed += 1
+                    progress_bar.progress(completed / total)
+                    progress_text.text(f"잔고 조회: {completed}/{total}")
 
         except Exception as e:
-            st.error(f"전체 오류 발생: {str(e)}")
-        finally:
-            progress_bar.empty()
-            progress_text.empty()
-
-        # DEX 유동성 풀 조회 (옵션 선택시)
-        if include_dex:
-            st.info("🔍 DEX 유동성 풀 조회 중...")
-            dex_pairs = get_dexscreener_data(selected_chain, token_input)
-
-            if dex_pairs:
-                liquidity_infos = format_liquidity_info(dex_pairs)
-
-                for liq_info in liquidity_infos:
-                    token_amount = liq_info["liquidity_usd"] / liq_info["price_usd"] if liq_info["price_usd"] > 0 else 0
-
-                    rows.append({
-                        "지갑이름": liq_info["name"],
-                        "주소": liq_info["address"][:10] + "..." + liq_info["address"][-6:] if liq_info["address"] else "N/A",
-                        "잔고": f"{token_amount:,.4f}",
-                        "달러환산": f"${liq_info['liquidity_usd']:,.2f}",
-                        "최근출금": "-",
-                        "출금대상": "-",
-                        "출금시간": "-",
-                        "출금타임스탬프": 0,
-                        "탐색기": f"{explorer}/address/{liq_info['address']}" if liq_info["address"] else "#",
-                        "타입": "DEX"
-                    })
-
-                if liquidity_infos:
-                    total_volume = sum(info["volume_24h"] for info in liquidity_infos)
-                    st.success(f"📊 DEX 24시간 거래량: ${total_volume:,.2f}")
-            else:
-                st.warning("DEX 유동성 풀을 찾을 수 없습니다.")
+            st.error(f"잔고 조회 오류: {str(e)}")
 
         progress_bar.empty()
         progress_text.empty()
+
+    # 2단계: 출금 정보 순차 조회 (Explorer API rate limit 방지)
+    with st.spinner('출금 정보 순차 조회 중... (API 안정성 확보)'):
+        progress_bar = st.progress(0)
+        progress_text = st.empty()
+
+        completed = 0
+        total = len(wallets)
+        decimals = token_info.get("decimals", 18) if 'token_info' in dir() else 18
+
+        for name, addr in wallets.items():
+            try:
+                balance = balance_results.get(addr, 0)
+                usd_value = round(balance * token_price, 2) if token_price > 0 else 0
+                token_url = f"{explorer}/token/{token_input}?a={addr}"
+
+                # 출금 정보 순차 조회 (rate limit 방지)
+                last_wd = get_last_withdrawal(selected_chain, addr, token_input, decimals)
+
+                if last_wd and "error" not in last_wd:
+                    # 달러 환산 표시
+                    wd_amount_raw = last_wd["amount"]
+                    wd_usd = wd_amount_raw * token_price if token_price > 0 else 0
+                    wd_amount = f"${format_amount(wd_usd)}" if wd_usd > 0 else format_amount(wd_amount_raw)
+                    wd_to = last_wd["to"][:10] + "..." if last_wd["to"] else "-"
+                    wd_time = format_time_ago(last_wd["timestamp"])
+                    wd_timestamp = last_wd["timestamp"]
+                elif last_wd and "error" in last_wd:
+                    # 에러 표시 (디버깅용)
+                    wd_amount = f"ERR:{last_wd['error'][:15]}"
+                    wd_to = "-"
+                    wd_time = "-"
+                    wd_timestamp = 0
+                else:
+                    wd_amount = "-"
+                    wd_to = "-"
+                    wd_time = "-"
+                    wd_timestamp = 0
+
+                rows.append({
+                    "지갑이름": name,
+                    "주소": addr[:10] + "..." + addr[-6:],
+                    "잔고": f"{balance:,.4f}",
+                    "달러환산": f"${usd_value:,.2f}",
+                    "최근출금": f"{wd_amount}",
+                    "출금대상": wd_to,
+                    "출금시간": wd_time,
+                    "출금타임스탬프": wd_timestamp,  # 정렬용
+                    "탐색기": token_url,
+                    "타입": "CEX"
+                })
+
+            except Exception as e:
+                rows.append({
+                    "지갑이름": name,
+                    "주소": addr[:10] + "..." + addr[-6:],
+                    "잔고": f"{balance_results.get(addr, 0):,.4f}",
+                    "달러환산": f"${balance_results.get(addr, 0) * token_price:,.2f}" if token_price > 0 else "$0.00",
+                    "최근출금": "-",
+                    "출금대상": "-",
+                    "출금시간": "-",
+                    "출금타임스탬프": 0,
+                    "탐색기": f"{explorer}/token/{token_input}?a={addr}",
+                    "타입": "CEX"
+                })
+
+            completed += 1
+            progress_bar.progress(completed / total)
+            progress_text.text(f"출금 정보: {completed}/{total} ({name[:15]}...)")
+
+        progress_bar.empty()
+        progress_text.empty()
+
+    # DEX 유동성 풀 조회 (옵션 선택시)
+    if include_dex:
+        st.info("🔍 DEX 유동성 풀 조회 중...")
+        dex_pairs = get_dexscreener_data(selected_chain, token_input)
+
+        if dex_pairs:
+            liquidity_infos = format_liquidity_info(dex_pairs)
+
+            for liq_info in liquidity_infos:
+                token_amount = liq_info["liquidity_usd"] / liq_info["price_usd"] if liq_info["price_usd"] > 0 else 0
+
+                rows.append({
+                    "지갑이름": liq_info["name"],
+                    "주소": liq_info["address"][:10] + "..." + liq_info["address"][-6:] if liq_info["address"] else "N/A",
+                    "잔고": f"{token_amount:,.4f}",
+                    "달러환산": f"${liq_info['liquidity_usd']:,.2f}",
+                    "최근출금": "-",
+                    "출금대상": "-",
+                    "출금시간": "-",
+                    "출금타임스탬프": 0,
+                    "탐색기": f"{explorer}/address/{liq_info['address']}" if liq_info["address"] else "#",
+                    "타입": "DEX"
+                })
+
+            if liquidity_infos:
+                total_volume = sum(info["volume_24h"] for info in liquidity_infos)
+                st.success(f"📊 DEX 24시간 거래량: ${total_volume:,.2f}")
+        else:
+            st.warning("DEX 유동성 풀을 찾을 수 없습니다.")
 
     # 데이터프레임 표시
     df = pd.DataFrame(rows)
@@ -1188,7 +1333,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
-
 
 
 
