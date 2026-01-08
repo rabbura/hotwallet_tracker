@@ -147,7 +147,7 @@ chain_info = {
             "바빗핫2": "0xA31231E727Ca53Ff95f0D00a06C645110c4aB647",
             "바빗핫3": "0xad85405cbb1476825b78a021fa9e543bf7937549",
             "바빗핫4": "0x6522B7F9d481eCEB96557F44753a4b893F837E90",
-            "바빗핫173": "0xf42aac93ab142090db9fdc0bc86aab73cb36f173",
+            "바빗핫173(거의메인)": "0xf42aac93ab142090db9fdc0bc86aab73cb36f173",
             "코베10번핫(거의메인)": "0xa9d1e08c7793af67e9d92fe308d5697fb81d3e43",
             "빗겟3번핫": "0x97b9D2102A9a65A26E1EE82D59e42d1B73B68689",
             "빗겟5번핫": "0x5bdf85216ec1e38d6458c870992a69e38e03f7ef",
@@ -161,7 +161,7 @@ chain_info = {
             "쿠코20번핫(거의메인)": "0x58edf78281334335effa23101bbe3371b6a36a51",
             "코빗8번핫": "0xf0bc8fddb1f358cef470d63f96ae65b1d7914953",
             "코인원1번핫": "0x167a9333bf582556f35bd4d16a7e80e191aa6476",
-            "후오비48번핫": "0xa03400e098f4421b34a3a44a1b4e571419517687",
+            "후오비48번핫(거의메인)": "0xa03400e098f4421b34a3a44a1b4e571419517687",
             "크닷12번핫": "0x46340b20830761efd32832a74d7169b29feb9758",
             "크닷21번핫": "0x5b71d5fd6bb118665582dd87922bf3b9de6c75f9",
             "빙핫": "0x065AC3d33FEC104FBa9f2f4D674AfAA7c4EBcF43",
@@ -365,7 +365,7 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
             "address": wallet,
             "contractaddress": token_contract,
             "page": 1,
-            "offset": 50,
+            "offset": 30,
             "sort": "desc"
         }
         if api_key:
@@ -384,7 +384,7 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
             "address": wallet,
             "contractaddress": token_contract,
             "page": 1,
-            "offset": 50,
+            "offset": 30,
             "sort": "desc"
         }
         if api_key:
@@ -822,6 +822,8 @@ if token_input.startswith("0x") and selected_chain:
     else:
         st.success(f"✅ {selected_chain} Explorer API 키 설정됨")
 
+    st.caption("ℹ️ 최근출금: 각 지갑별 최근 30건 내 출금 기록만 조회됩니다.")
+
     # 토큰 정보 먼저 조회 (첫 번째 지갑으로)
     with st.spinner('토큰 정보 조회 중...'):
         try:
@@ -1186,6 +1188,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
