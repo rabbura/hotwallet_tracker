@@ -365,7 +365,7 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
             "address": wallet,
             "contractaddress": token_contract,
             "page": 1,
-            "offset": 10,
+            "offset": 50,
             "sort": "desc"
         }
         if api_key:
@@ -384,7 +384,7 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
             "address": wallet,
             "contractaddress": token_contract,
             "page": 1,
-            "offset": 10,
+            "offset": 50,
             "sort": "desc"
         }
         if api_key:
