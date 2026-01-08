@@ -794,7 +794,10 @@ if token_input.startswith("0x") and selected_chain:
     # API 키 확인
     api_key = get_explorer_api_key(selected_chain)
     if not api_key:
-        st.warning(f"⚠️ {selected_chain} Explorer API 키가 설정되지 않았습니다. 최근 출금 정보가 표시되지 않을 수 있습니다.")
+        st.error(f"❌ {selected_chain} Explorer API 키가 설정되지 않았습니다! 최근 출금 정보를 조회할 수 없습니다.")
+        st.info("Settings > Secrets에서 [explorer_api_keys] 섹션에 API 키를 추가하세요.")
+    else:
+        st.success(f"✅ {selected_chain} Explorer API 키 설정됨")
 
     # 토큰 정보 먼저 조회 (첫 번째 지갑으로)
     with st.spinner('토큰 정보 조회 중...'):
@@ -1143,8 +1146,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
-
-
 
 
 
