@@ -391,15 +391,20 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
             params["apikey"] = api_key
 
     try:
-        res = requests.get(api_url, params=params, timeout=10)
+        res = requests.get(api_url, params=params, timeout=15)
 
         if res.status_code == 200:
             data = res.json()
 
             if data.get("status") == "1" and data.get("result"):
+                result_list = data.get("result", [])
+
                 # 출금 트랜잭션만 필터링 (from == wallet)
-                for tx in data["result"]:
-                    if tx.get("from", "").lower() == wallet.lower():
+                for tx in result_list:
+                    tx_from = tx.get("from", "").lower()
+                    wallet_lower = wallet.lower()
+
+                    if tx_from == wallet_lower:
                         token_decimal = int(tx.get("tokenDecimal", decimals))
                         amount = int(tx.get("value", 0)) / (10 ** token_decimal)
 
@@ -1125,7 +1130,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
-
 
 
 
