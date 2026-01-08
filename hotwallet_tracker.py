@@ -295,7 +295,7 @@ if include_dex:
 # 병렬처리 워커 수 설정
 col1, col2 = st.columns([3, 1])
 with col2:
-    max_workers = st.slider("병렬처리 워커 수", min_value=1, max_value=10, value=3, help="동시에 처리할 작업 수 (API 제한으로 3 권장)")
+    max_workers = st.slider("병렬처리 워커 수", min_value=1, max_value=10, value=5, help="동시에 처리할 작업 수")
 
 # 토큰 정보를 저장할 전역 변수 (thread-safe)
 token_info_lock = threading.Lock()
@@ -393,7 +393,7 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
     max_retries = 3
 
     # Rate limit 방지: API 호출 전 약간의 딜레이
-    time.sleep(0.25)
+    time.sleep(0.15)
 
     for attempt in range(max_retries):
         try:
@@ -919,7 +919,10 @@ if token_input.startswith("0x") and selected_chain:
                         # 최근 출금 정보 처리
                         last_wd = result.get("last_withdrawal")
                         if last_wd and "error" not in last_wd:
-                            wd_amount = format_amount(last_wd["amount"])
+                            # 달러 환산 표시
+                            wd_amount_raw = last_wd["amount"]
+                            wd_usd = wd_amount_raw * token_price if token_price > 0 else 0
+                            wd_amount = f"${format_amount(wd_usd)}" if wd_usd > 0 else format_amount(wd_amount_raw)
                             wd_to = last_wd["to"][:10] + "..." if last_wd["to"] else "-"
                             wd_time = format_time_ago(last_wd["timestamp"])
                             wd_timestamp = last_wd["timestamp"]
@@ -1055,20 +1058,25 @@ if token_input.startswith("0x") and selected_chain:
         st.metric("전체 총 잔고", f"{total_balance:,.4f}")
         st.metric("전체 달러 가치", f"${total_usd:,.2f}")
 
-    # 테이블 표시
+    # 테이블 표시 (거의메인 지갑 강조)
+    def highlight_main_wallets(row):
+        """(거의메인) 지갑을 노란색 배경으로 강조"""
+        if "(거의메인)" in str(row.get("지갑이름", "")):
+            return ["background-color: #3d3d00; color: #ffff00"] * len(row)
+        return [""] * len(row)
+
+    # 스타일 적용 (탐색기 링크 컬럼 제외)
+    display_df = df.drop(columns=["탐색기"])
+    styled_df = display_df.style.apply(highlight_main_wallets, axis=1)
+
     st.dataframe(
-        df,
+        styled_df,
         use_container_width=True,
         height=min(len(df) * 40 + 100, 1000),
         column_config={
-            "탐색기": st.column_config.LinkColumn(
-                "탐색기",
-                help="블록 탐색기에서 확인",
-                display_text="🔍 확인"
-            ),
             "최근출금": st.column_config.TextColumn(
-                "최근출금",
-                help="해당 지갑에서 최근 출금한 토큰 수량"
+                "최근출금($)",
+                help="해당 지갑에서 최근 출금한 금액 (달러 환산)"
             ),
             "출금대상": st.column_config.TextColumn(
                 "출금대상",
@@ -1084,6 +1092,16 @@ if token_input.startswith("0x") and selected_chain:
             )
         }
     )
+
+    # 탐색기 링크 별도 표시
+    with st.expander("🔍 블록 탐색기 링크"):
+        for _, row in df.iterrows():
+            wallet_name = row["지갑이름"]
+            link = row["탐색기"]
+            if "(거의메인)" in wallet_name:
+                st.markdown(f"⭐ **[{wallet_name}]({link})**")
+            else:
+                st.markdown(f"[{wallet_name}]({link})")
 
     # 디버깅 정보
     with st.expander("디버깅 정보"):
