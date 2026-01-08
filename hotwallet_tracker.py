@@ -38,16 +38,22 @@ def get_explorer_api_key(chain):
     except:
         return ""
 
-# Explorer API URL 매핑
-EXPLORER_API_URLS = {
-    "ETH": "https://api.etherscan.io/api",
-    "BSC": "https://api.bscscan.com/api",
-    "ARB": "https://api.arbiscan.io/api",
-    "OP": "https://api-optimistic.etherscan.io/api",
-    "BASE": "https://api.basescan.org/api",
-    "AVAX": "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api",  # Snowtrace 대체
-    "POL": "https://api.polygonscan.com/api"
+# Explorer API URL 매핑 (Etherscan API V2 사용)
+# V2는 단일 엔드포인트 + chainid 파라미터 방식
+ETHERSCAN_V2_API = "https://api.etherscan.io/v2/api"
+
+# 체인별 Chain ID (Etherscan V2용)
+CHAIN_IDS = {
+    "ETH": 1,
+    "BSC": 56,
+    "ARB": 42161,
+    "OP": 10,
+    "BASE": 8453,
+    "POL": 137
 }
+
+# AVAX는 별도 API 사용 (Routescan)
+AVAX_API_URL = "https://api.routescan.io/v2/network/mainnet/evm/43114/etherscan/api"
 
 # RPC URL을 chain에 따라 넣어줍니다.
 RPC_URLS = {
@@ -333,7 +339,7 @@ def format_amount(amount):
         return f"{amount:.2f}"
 
 # ============================================================
-# 최근 출금 정보 조회 함수
+# 최근 출금 정보 조회 함수 (Etherscan API V2 사용)
 # ============================================================
 def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
     """
@@ -348,26 +354,43 @@ def get_last_withdrawal(chain, wallet, token_contract, decimals=18):
         }
         또는 None (조회 실패/없음)
     """
-    api_url = EXPLORER_API_URLS.get(chain)
     api_key = get_explorer_api_key(chain)
 
-    if not api_url:
-        return None
-
-    try:
+    # AVAX는 별도 API 사용
+    if chain == "AVAX":
+        api_url = AVAX_API_URL
         params = {
             "module": "account",
             "action": "tokentx",
             "address": wallet,
             "contractaddress": token_contract,
             "page": 1,
-            "offset": 10,  # 최근 10개 조회 (출금만 필터링하기 위해)
+            "offset": 10,
             "sort": "desc"
         }
+        if api_key:
+            params["apikey"] = api_key
+    else:
+        # Etherscan V2 API 사용
+        chain_id = CHAIN_IDS.get(chain)
+        if not chain_id:
+            return None
 
+        api_url = ETHERSCAN_V2_API
+        params = {
+            "chainid": chain_id,
+            "module": "account",
+            "action": "tokentx",
+            "address": wallet,
+            "contractaddress": token_contract,
+            "page": 1,
+            "offset": 10,
+            "sort": "desc"
+        }
         if api_key:
             params["apikey"] = api_key
 
+    try:
         res = requests.get(api_url, params=params, timeout=10)
 
         if res.status_code == 200:
@@ -1102,8 +1125,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
-
-
 
 
 
