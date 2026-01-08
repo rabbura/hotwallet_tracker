@@ -822,7 +822,7 @@ if token_input.startswith("0x") and selected_chain:
     else:
         st.success(f"✅ {selected_chain} Explorer API 키 설정됨")
 
-    st.caption("ℹ️ 최근출금: 각 지갑별 최근 30건 내 출금 기록만 조회됩니다.")
+    st.caption("ℹ️ 최근출금: 각 지갑별 최근 입출금 내역 30건 조회 후 업데이트됩니다. (30건 내 출금 없으면 미표시)")
 
     # 토큰 정보 먼저 조회 (첫 번째 지갑으로)
     with st.spinner('토큰 정보 조회 중...'):
@@ -1188,7 +1188,6 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
-
 
 
 
