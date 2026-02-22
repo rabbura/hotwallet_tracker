@@ -162,6 +162,7 @@ chain_info = {
             "코빗8번핫": "0xf0bc8fddb1f358cef470d63f96ae65b1d7914953",
             "코인원1번핫": "0x167a9333bf582556f35bd4d16a7e80e191aa6476",
             "후오비48번핫(거의메인)": "0xa03400e098f4421b34a3a44a1b4e571419517687",
+            "후오비60번핫(콜드추정)": "0x4fb312915B779b1339388e14b6d079741Ca83128",
             "크닷12번핫": "0x46340b20830761efd32832a74d7169b29feb9758",
             "크닷21번핫": "0x5b71d5fd6bb118665582dd87922bf3b9de6c75f9",
             "빙핫": "0x065AC3d33FEC104FBa9f2f4D674AfAA7c4EBcF43",
@@ -1333,6 +1334,7 @@ else:
         st.write(f"{selected_chain} 체인 예시:")
         for token_name, token_addr in example_tokens[selected_chain].items():
             st.code(f"{token_name}: {token_addr}")
+
 
 
 
